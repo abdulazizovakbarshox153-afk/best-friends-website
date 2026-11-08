@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Favorite People 💖</title>
+<style>
+:root{--pink:#ff6fae;--purple:#8b5cf6;--bg:#0e1020;--card:#191b31;--text:#f7f3ff;--muted:#b9b5ce}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;color:var(--text);background:radial-gradient(circle at top left,#30204c 0,transparent 40%),linear-gradient(135deg,#0e1020,#17142a);min-height:100vh}
+header{text-align:center;padding:60px 20px 35px}
+.tag{display:inline-block;padding:7px 14px;border:1px solid #ffffff30;border-radius:999px;color:#ffc1df;font-size:13px}
+h1{font-size:clamp(2.4rem,7vw,4.5rem);margin:18px 0 10px;line-height:1.05}
+h1 span{color:var(--pink)}
+header p{color:var(--muted);max-width:600px;margin:0 auto}
+main{width:min(1000px,92%);margin:auto}
+.form-card{background:#ffffff0b;border:1px solid #ffffff20;border-radius:22px;padding:24px;margin:20px 0 35px;backdrop-filter:blur(10px)}
+.form-card h2{margin-top:0}
+form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+input,select,textarea,button{font:inherit;border-radius:12px;border:1px solid #ffffff25;padding:12px;background:#111326;color:var(--text)}
+textarea{grid-column:1/-1;resize:vertical;min-height:75px}
+input[type=file]{grid-column:1/-1}
+button{background:linear-gradient(135deg,var(--pink),var(--purple));border:0;font-weight:700;cursor:pointer}
+form button{grid-column:1/-1}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.section-head p{color:var(--muted)}
+#friends{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin:20px 0 50px}
+.friend{position:relative;background:var(--card);border:1px solid #ffffff1c;border-radius:20px;overflow:hidden;box-shadow:0 12px 35px #0003}
+.friend img{width:100%;height:210px;object-fit:cover;background:#27243c}
+.friend .info{padding:17px}
+.friend h3{margin:0 0 5px;font-size:1.25rem}
+.friend .type{color:#ff9bc9;font-size:12px;text-transform:uppercase;letter-spacing:1px}
+.friend p{color:var(--muted);line-height:1.5;white-space:pre-wrap}
+.remove{background:#ffffff12;color:#ffb3d4;padding:7px 10px;font-size:12px}
+footer{text-align:center;color:var(--muted);padding:25px}
+.empty{text-align:center;color:var(--muted);padding:30px;border:1px dashed #ffffff30;border-radius:18px;grid-column:1/-1}
+@media(max-width:600px){form{grid-template-columns:1fr}input,select,textarea,form button{grid-column:1/-1}}
+</style>
+</head>
+<body>
+<header>
+  <span class="tag">A little corner of my world ✨</span>
+  <h1>My Favorite <span>People</span> 💖</h1>
+  <p>Good friends make ordinary moments unforgettable. This page is for the people who make my life brighter.</p>
+</header>
+<main>
+  <section class="form-card">
+    <h2>Add someone special ✨</h2>
+    <form id="friendForm">
+      <input id="name" placeholder="Friend's name" required maxlength="50">
+      <select id="kind"><option>Best Boy Friend</option><option>Best Girl Friend</option><option>Best Friend</option></select>
+      <textarea id="message" placeholder="Write a little message about them..." maxlength="300"></textarea>
+      <input id="photo" type="file" accept="image/*">
+      <button type="submit">Add to my favorites 💗</button>
+    </form>
+  </section>
+  <section>
+    <div class="section-head"><div><h2>My people 🫶</h2><p>Every friendship has its own kind of magic.</p></div></div>
+    <div id="friends"><div class="empty">Your friend cards will appear here. Add someone above! 💌</div></div>
+  </section>
+</main>
+<footer>Made with love 💕</footer>
+<script>
+const form=document.getElementById('friendForm'), friends=document.getElementById('friends');
+const fallback='data:image/svg+xml;charset=UTF-8,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="400" height="250"><rect width="100%" height="100%" fill="#292342"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="75">💖</text></svg>`);
+form.addEventListener('submit',e=>{
+ e.preventDefault();
+ const name=document.getElementById('name').value.trim();
+ const kind=document.getElementById('kind').value;
+ const message=document.getElementById('message').value.trim();
+ const file=document.getElementById('photo').files[0];
+ const addCard=src=>{
+   if(friends.querySelector('.empty'))friends.innerHTML='';
+   const card=document.createElement('article');card.className='friend';
+   const img=document.createElement('img');img.src=src;img.alt='Photo of '+name;
+   const info=document.createElement('div');info.className='info';
+   const type=document.createElement('div');type.className='type';type.textContent=kind;
+   const h=document.createElement('h3');h.textContent=name;
+   const p=document.createElement('p');p.textContent=message||'A truly special person in my life.';
+   const remove=document.createElement('button');remove.className='remove';remove.textContent='Remove';
+   remove.addEventListener('click',()=>card.remove());
+   info.append(type,h,p,remove);card.append(img,info);friends.prepend(card);form.reset();
+ };
+ if(file){const reader=new FileReader();reader.onload=()=>addCard(reader.result);reader.readAsDataURL(file);}else addCard(fallback);
+});
+</script>
+</body>
+</html>
